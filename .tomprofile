@@ -1,0 +1,11 @@
+alias profile="vim ~/.tomprofile"
+alias refresh="source ~/.tomprofile"
+alias install="sudo apt-get install $1"
+alias pbcopy="xclip -sel clip"
+alias dup="(cd ~/dev-environments/air-local && docker-compose up -d)"
+alias ddown="~/dev-environments/air-local && docker-compose down"
+alias squash="git rebase -i HEAD~2"
+alias web="cd ~/web"
+alias search="find . -type f -print | xargs grep $1"
+alias mysqllocal="mysql -uroot -phyperion -hmysql.local"
+
