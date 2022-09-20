@@ -1,13 +1,15 @@
 alias profile="vim ~/terminal-profile/.tomprofile"
 alias refresh="source ~/terminal-profile/.tomprofile"
-alias install="sudo apt-get install $1"
+alias install="sudo apt-get install "
 alias pbcopy="xclip -sel clip"
-alias dup="(cd ~/dev-environments/air-local && docker-compose up -d)"
-alias ddown="~/dev-environments/air-local && docker-compose down"
+alias dup="ddown; (cd ~/dev-environments/air-local && docker-compose up -d)"
+alias ddown="(cd ~/dev-environments/air-local && docker-compose down)"
 alias squash="git rebase -i HEAD~2"
 alias web="cd ~/web"
-alias search="find . -type f -print | xargs grep $1"
+function search() { find . -type f -print | xargs grep "$1" }
 alias mysqllocal="mysql -uroot -phyperion -hmysql.local"
-alias clone="git clone git@github.com:Eagle-Eye-Solutions/$1"
-alias cupdate="dax docker:run dashboard.local \"COMPOSER_MEMORY_LIMIT=-1 composer update -v\""
+function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 }
+function cupdate() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer update -v" }
 alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tail -f error.log"
+function dssh() { dax docker:ssh $1.local }
+
