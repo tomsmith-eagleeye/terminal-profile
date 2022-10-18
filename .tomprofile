@@ -9,7 +9,10 @@ alias web="cd ~/web"
 function search() { find . -type f -print | xargs grep "$1" }
 alias mysqllocal="mysql -uroot -phyperion -hmysql.local"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 }
-function cupdate() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer update -v" }
+function cupdate() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer update -vvv" }
+function cshow() { dax docker:run $1.local "composer show" }
 alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tail -f error.log"
 function dssh() { dax docker:ssh $1.local }
+alias compile='dax docker:run dashboard.local "bin/compile-assets"'
+
 
