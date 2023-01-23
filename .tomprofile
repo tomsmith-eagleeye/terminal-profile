@@ -20,6 +20,7 @@ function cupdate() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer 
 function behat() { dax docker:run $1.local "bin/behat $2" }
 function cshow() { dax docker:run $1.local "composer show" }
 alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tail -f error.log"
+function log() { ( tail -f ~/dev-environments/air-local/mounts/log/eagleeye/$1/app/error.log) }
 function dssh() { dax docker:ssh $1.local }
 alias compile='dax docker:run dashboard.local "bin/compile-assets"'
 alias dips="dax docker:ips"
@@ -27,5 +28,9 @@ alias geturl="git remote get-url origin"
 alias testdown="(cd ~/dev-environments/test/ && docker-compose down)"
 alias seldown="(cd ~/dev-environments/selenoid/ && docker-compose down)"
 alias testup="(cd ~/dev-environments/test/ && docker-compose up -d)"
-alias selup="(cd ~/dev-environments/selenoid/ && docker-compose up -d)"
-alias tup="(testdown && seldown && selup && testup)"
+alias selup="(cd ~/dev-environments/selenoid/ && docker-compose up -d && dax docker:generate-hosts)"
+alias tdown="(testdown && seldown)"
+alias tup="(tdown && selup && testup)"
+alias events="mysql -u root -phyperion -h mysql.local  PHOENIX_REBORN < ~/web/phoenix-reborn/data/deployment/events.sql"
+
+export PATH=~/.composer/vendor/bin:$PATH
