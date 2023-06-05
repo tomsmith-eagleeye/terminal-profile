@@ -50,13 +50,16 @@ alias mysqllocal="mysql -uroot -phyperion -hmysql.local"
 alias events="mysql -u root -phyperion -h mysql.local  PHOENIX_REBORN < ~/web/phoenix-reborn/data/deployment/events.sql"
 
 # Git
+git config --global rebase.autosquash true
 alias fetch="git fetch --prune"
 alias checkout="git checkout -b"
 alias commit="git commit -m"
+alias fixup="git commit --fixup HEAD"
 alias squash="git rebase -i HEAD~2"
 alias reword="git rebase -i HEAD~1"
 alias diff="git diff HEAD"
 alias geturl="git remote get-url origin"
+alias graph="git log --graph --oneline --decorate"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
 
 # PATH variable
