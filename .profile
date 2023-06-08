@@ -19,6 +19,7 @@ alias reveal="xdg-open ."
 alias install="sudo apt-get install "
 alias pbcopy="xclip -sel clip"
 alias copy="fc -ln -1 | pbcopy"
+alias dirsize="du -hs"
 function search() { find . -print | xargs grep "$1" }
 function searchf() { find . -type f -print | xargs grep "$1" }
 function searchd() { find . -type d -print | xargs grep "$1" }
