@@ -23,6 +23,17 @@ alias dirsize="du -hs"
 function search() { find . -print | xargs grep "$1" }
 function searchf() { find . -type f -print | xargs grep "$1" }
 function searchd() { find . -type d -print | xargs grep "$1" }
+function tailc(){
+tail -f -n 50 $@ | awk -W interactive '
+  /DEBUG/ {print "\033[32m" $0 "\033[39m"}
+  /INFO/ {print "\033[92m" $0 "\033[39m"}
+  /NOTICE/ {print "\033[33m" $0 "\033[39m"}
+  /WARNING/ {print "\033[93m" $0 "\033[39m"}
+  /ERROR/ {print "\033[31m" $0 "\033[39m"}
+  /CRITICAL/ {print "\033[91m" $0 "\033[39m"}
+  /ALERT/ {print "\033[35m" $0 "\033[39m"}
+  /EMERGENCY/ {print "\033[39m" $0 "\033[41m"}
+'}
 
 # Docker containers
 alias dup="ddown; (cd ~/dev-environments/air-local && docker-compose up -d --remove-orphans)"
@@ -59,7 +70,6 @@ alias commit="git commit -m"
 alias fixup="git commit --fixup HEAD"
 alias squash="git rebase -i HEAD~2"
 alias reword="git rebase -i HEAD~1"
-alias diff="git diff HEAD "
 alias geturl="git remote get-url origin"
 alias graph="git log --graph --oneline --decorate"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
