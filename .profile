@@ -36,12 +36,14 @@ tail -f -n 50 $@ | awk -W interactive '
 '}
 
 # Docker containers
-alias dup="ddown; (cd ~/dev-environments/air-local && docker-compose up -d --remove-orphans)"
-alias ddown="(cd ~/dev-environments/air-local && docker-compose down)"
-alias testdown="(cd ~/dev-environments/test/ && docker-compose down)"
-alias seldown="(cd ~/dev-environments/selenoid/ && docker-compose down)"
-alias testup="(cd ~/dev-environments/test/ && docker-compose up -d)"
-alias selup="(cd ~/dev-environments/selenoid/ && docker-compose up -d && dax docker:generate-hosts)"
+alias dup="ddown; (cd ~/dev-environments/air-local && docker compose up -d --remove-orphans)"
+alias ddown="(cd ~/dev-environments/air-local && docker compose down)"
+alias testdown="(cd ~/dev-environments/test/ && docker compose down)"
+alias seldown="(cd ~/dev-environments/selenoid/ && docker compose down)"
+alias testup="(cd ~/dev-environments/test/ && docker compose up -d)"
+alias selup="(cd ~/dev-environments/selenoid/ && docker compose up -d && dax docker:generate-hosts)"
+alias recup="(recdown; cd ~/web/api-recommend/ && docker compose up -d && dax docker:generate-hosts)"
+alias recdown="(cd ~/web/api-recommend/ && docker compose down)"
 alias tdown="(testdown && seldown)"
 alias tup="(tdown && selup && testup)"
 alias trestart="(tdown && dup && tup)"
@@ -50,9 +52,12 @@ alias recdown="(cd ~/web/api-recommend/ && docker-compose down)"
 alias dips="dax docker:ips"
 alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tail -f error.log"
 alias compile='dax docker:run dashboard.local "bin/compile-assets"'
+alias perms="sudo chown $USER:$USER -R ."
 function dssh() { dax docker:ssh $1.local }
 function cupdate() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer update -vvv" }
+function lcupdate() { (cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update --ignore-platform-req=ext-intl) }
 function cinstall() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer install -vvv" }
+function lcinstall() { (cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer install --ignore-platform-req=ext-intl) }
 function behat() { dax docker:run $1.local "bin/behat $2" }
 function cshow() { dax docker:run $1.local "composer show" }
 function log() { cd ~/dev-environments/air-local/mounts/log/eagleeye/$1/app/ && ls -l }
@@ -65,11 +70,12 @@ alias events="mysql -u root -phyperion -h mysql.local  PHOENIX_REBORN < ~/web/ph
 git config --global rebase.autosquash true
 alias fetch="git fetch --prune"
 alias checkout="git checkout -b"
+function branch() { git branch -u origin/$1 && git checkout $1 }
 alias back="git checkout -"
 alias commit="git commit -m"
 alias fixup="git commit --fixup HEAD"
 alias squash="git rebase -i HEAD~2"
-alias reword="git rebase -i HEAD~1"
+alias reword="git commit --amend"
 alias geturl="git remote get-url origin"
 alias graph="git log --graph --oneline --decorate"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
