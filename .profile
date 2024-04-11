@@ -88,6 +88,9 @@ alias geturl="git remote get-url origin"
 alias graph="git log --graph --oneline --decorate"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
 
+# Docker Compatibility
+alias docker-compose="docker compose"
+
 # PHP version management
 alias php8="sudo mv /etc/alternatives/php /etc/alternatives/php7 && sudo mv /etc/alternatives/php8 /etc/alternatives/php"
 alias php7="sudo mv /etc/alternatives/php /etc/alternatives/php8 && sudo mv /etc/alternatives/php7 /etc/alternatives/php"
