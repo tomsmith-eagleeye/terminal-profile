@@ -11,6 +11,8 @@ alias phoenix="cd ~/web/phoenix-reborn"
 alias hydra="cd ~/web/hydra"
 alias hercules="cd ~/web/hercules"
 alias medusa="cd ~/web/medusa"
+alias tomato="cd ~/web/tomato"
+alias potato="cd ~/web/potato"
 function repo() { cd ~/web/$1 }
 
 # General useful commands
@@ -36,6 +38,7 @@ tail -f -n 50 $@ | awk -W interactive '
 '}
 
 # Docker containers
+alias dupold="(cd ~/dev-environments/air-local && docker-compose -f docker-compose-php7.4.yml up -d)"
 alias dup="ddown; (cd ~/dev-environments/air-local && docker compose up -d --remove-orphans)"
 alias ddown="(cd ~/dev-environments/air-local && docker compose down)"
 alias testdown="(cd ~/dev-environments/test/ && docker compose down)"
@@ -51,16 +54,21 @@ alias recup="(recdown; cd ~/web/api-recommend/ && docker-compose up -d && dax do
 alias recdown="(cd ~/web/api-recommend/ && docker-compose down)"
 alias dips="dax docker:ips"
 alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tail -f error.log"
-alias compile='dax docker:run dashboard.local "bin/compile-assets"'
+alias compile='docker exec dashboard.local bin/compile-assets'
 alias perms="sudo chown $USER:$USER -R ."
+function dockssh() { docker exec -it $1.local bash }
 function dssh() { dax docker:ssh $1.local }
-function cupdate() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer update -vvv" }
-function lcupdate() { (cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update --ignore-platform-req=ext-intl) }
-function cinstall() { dax docker:run $1.local "COMPOSER_MEMORY_LIMIT=-1 composer install -vvv" }
+function cupdate() { docker exec $1.local COMPOSER_MEMORY_LIMIT=-1 composer update -vvv }
+alias compup="COMPOSER_MEMORY_LIMIT=-1 composer update"
+function lcupdate() { ( cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update --ignore-platform-req=ext-intl) }
+function lcupdateold() { ( cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update ) }
+alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tailc error.log"
+function cinstall() { docker exec $1.local COMPOSER_MEMORY_LIMIT=-1 composer install -vvv }
 function lcinstall() { (cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer install --ignore-platform-req=ext-intl) }
-function behat() { dax docker:run $1.local "bin/behat $2" }
-function cshow() { dax docker:run $1.local "composer show" }
-function log() { cd ~/dev-environments/air-local/mounts/log/eagleeye/$1/app/ && ls -l }
+function behat() { docker exec $1.local bin/behat $2 }
+function cshow() { docker exec $1.local composer show }
+function log() { cd ~/dev-environments/air-local/mounts/log/eagleeye/$1/app/ && ls -l && tailc application.log }
+function cexecute() { docker exec $1.local $2 }
 
 # MySQL
 alias mysqllocal="mysql -uroot -phyperion -hmysql.local"
@@ -79,6 +87,10 @@ alias reword="git commit --amend"
 alias geturl="git remote get-url origin"
 alias graph="git log --graph --oneline --decorate"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
+
+# PHP version management
+alias php8="sudo mv /etc/alternatives/php /etc/alternatives/php7 && sudo mv /etc/alternatives/php8 /etc/alternatives/php"
+alias php7="sudo mv /etc/alternatives/php /etc/alternatives/php8 && sudo mv /etc/alternatives/php7 /etc/alternatives/php"
 
 # PATH variable
 export PATH=~/.composer/vendor/bin:$PATH
