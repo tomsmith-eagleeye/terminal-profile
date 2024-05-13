@@ -25,6 +25,47 @@ alias dirsize="du -hs"
 function search() { find . -print | xargs grep "$1" }
 function searchf() { find . -type f -print | xargs grep "$1" }
 function searchd() { find . -type d -print | xargs grep "$1" }
+
+# Docker containers
+function dockssh() { docker exec -it $1.local bash }
+function dssh() { dax docker:ssh $1.local }
+function behat() { docker exec $1.local bin/behat $2 }
+function cexecute() { docker exec $1.local $2 }
+alias dexec="cexecute"
+alias dips="dax docker:ips"
+alias compile='docker exec dashboard.local bin/compile-assets'
+alias perms="sudo chown $USER:$USER -R ."
+# Main containers
+alias dup="ddown; (cd ~/dev-environments/air-local && docker compose up -d --remove-orphans)"
+alias ddown="(cd ~/dev-environments/air-local && docker compose down)"
+# test-dashboard containers
+alias testup="(cd ~/dev-environments/test/ && docker compose up -d)"
+alias testdown="(cd ~/dev-environments/test/ && docker compose down)"
+# Selenoid containers
+alias selup="(cd ~/dev-environments/selenoid/ && docker compose up -d && dax docker:generate-hosts)"
+alias seldown="(cd ~/dev-environments/selenoid/ && docker compose down)"
+# api-recommend containers
+alias recup="(recdown; cd ~/web/api-recommend/ && docker compose up -d && dax docker:generate-hosts)"
+alias recdown="(cd ~/web/api-recommend/ && docker compose down)"
+# test-dashboard and selenoid combo
+alias tup="(tdown && selup && testup)"
+alias tdown="(testdown && seldown)"
+# Wombo combo
+alias trestart="(tdown && dup && tup)"
+
+# Dependency management
+alias compup="COMPOSER_MEMORY_LIMIT=-1 composer update"
+function cupdate() { docker exec $1.local COMPOSER_MEMORY_LIMIT=-1 composer update -vvv }
+function lcupdate() { ( cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update --ignore-platform-req=ext-intl) }
+function lcupdateold() { ( cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update ) }
+function cinstall() { docker exec $1.local COMPOSER_MEMORY_LIMIT=-1 composer install -vvv }
+function lcinstall() { (cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer install --ignore-platform-req=ext-intl) }
+function yyarn() { docker exec dashboard-ui.local yarn install }
+function cshow() { docker exec $1.local composer show }
+
+# Log management
+function log() { cd ~/dev-environments/air-local/mounts/log/eagleeye/$1/app/ && ls -l && tailc application.log }
+alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tailc error.log"
 function tailc(){
 tail -f -n 50 $@ | awk -W interactive '
   /DEBUG/ {print "\033[32m" $0 "\033[39m"}
@@ -36,39 +77,6 @@ tail -f -n 50 $@ | awk -W interactive '
   /ALERT/ {print "\033[35m" $0 "\033[39m"}
   /EMERGENCY/ {print "\033[39m" $0 "\033[41m"}
 '}
-
-# Docker containers
-alias dupold="(cd ~/dev-environments/air-local && docker-compose -f docker-compose-php7.4.yml up -d)"
-alias dup="ddown; (cd ~/dev-environments/air-local && docker compose up -d --remove-orphans)"
-alias ddown="(cd ~/dev-environments/air-local && docker compose down)"
-alias testdown="(cd ~/dev-environments/test/ && docker compose down)"
-alias seldown="(cd ~/dev-environments/selenoid/ && docker compose down)"
-alias testup="(cd ~/dev-environments/test/ && docker compose up -d)"
-alias selup="(cd ~/dev-environments/selenoid/ && docker compose up -d && dax docker:generate-hosts)"
-alias recup="(recdown; cd ~/web/api-recommend/ && docker compose up -d && dax docker:generate-hosts)"
-alias recdown="(cd ~/web/api-recommend/ && docker compose down)"
-alias tdown="(testdown && seldown)"
-alias tup="(tdown && selup && testup)"
-alias trestart="(tdown && dup && tup)"
-alias recup="(recdown; cd ~/web/api-recommend/ && docker-compose up -d && dax docker:generate-hosts)"
-alias recdown="(cd ~/web/api-recommend/ && docker-compose down)"
-alias dips="dax docker:ips"
-alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tail -f error.log"
-alias compile='docker exec dashboard.local bin/compile-assets'
-alias perms="sudo chown $USER:$USER -R ."
-function dockssh() { docker exec -it $1.local bash }
-function dssh() { dax docker:ssh $1.local }
-function cupdate() { docker exec $1.local COMPOSER_MEMORY_LIMIT=-1 composer update -vvv }
-alias compup="COMPOSER_MEMORY_LIMIT=-1 composer update"
-function lcupdate() { ( cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update --ignore-platform-req=ext-intl) }
-function lcupdateold() { ( cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer update ) }
-alias dashlog="cd ~/dev-environments/air-local/mounts/log/eagleeye/dashboard/app && tailc error.log"
-function cinstall() { docker exec $1.local COMPOSER_MEMORY_LIMIT=-1 composer install -vvv }
-function lcinstall() { (cd ~/web/$1 && COMPOSER_MEMORY_LIMIT=-1 composer install --ignore-platform-req=ext-intl) }
-function behat() { docker exec $1.local bin/behat $2 }
-function cshow() { docker exec $1.local composer show }
-function log() { cd ~/dev-environments/air-local/mounts/log/eagleeye/$1/app/ && ls -l && tailc application.log }
-function cexecute() { docker exec $1.local $2 }
 
 # MySQL
 alias mysqllocal="mysql -uroot -phyperion -hmysql.local"
@@ -86,6 +94,7 @@ alias squash="git rebase -i HEAD~2"
 alias reword="git commit --amend"
 alias geturl="git remote get-url origin"
 alias graph="git log --graph --oneline --decorate"
+alias cbranch="git rev-parse --abbrev-ref HEAD | pbcopy"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
 
 # Docker Compatibility
