@@ -2,6 +2,7 @@
 alias profile="vim ~/terminal-profile/.profile"
 alias pprofile="open ~/terminal-profile/.profile"
 alias refresh="source ~/terminal-profile/.profile"
+alias terminal="cd ~/terminal-profile"
 
 # cd shortcuts
 alias web="cd ~/web"
@@ -86,15 +87,20 @@ alias events="mysql -u root -phyperion -h mysql.local  PHOENIX_REBORN < ~/web/ph
 git config --global rebase.autosquash true
 alias fetch="git fetch --prune"
 alias checkout="git checkout -b"
+alias fcheck="fetch && git checkout"
 function branch() { git branch -u origin/$1 && git checkout $1 }
 alias back="git checkout -"
 alias commit="git commit -m"
 alias fixup="git commit --fixup HEAD"
+alias rebase="fetch && git rebase -i"
 alias squash="git rebase -i HEAD~2"
 alias reword="git commit --amend"
 alias geturl="git remote get-url origin"
 alias graph="git log --graph --oneline --decorate"
 alias cbranch="git rev-parse --abbrev-ref HEAD | pbcopy"
+alias deletelocal="git branch -d"
+alias deleteorigin="git push -d origin"
+function deletebranch="deletelocal $1 && deleteorigin $1"
 function clone() { git clone git@github.com:Eagle-Eye-Solutions/$1 $2 }
 
 # Docker Compatibility
