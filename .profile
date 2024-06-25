@@ -91,6 +91,7 @@ alias fcheck="fetch && git checkout"
 function branch() { git branch -u origin/$1 && git checkout $1 }
 alias back="git checkout -"
 alias commit="git commit -m"
+alias discard="git restore --staged . && git restore ."
 alias fixup="git commit --fixup HEAD"
 alias rebase="fetch && git rebase -i"
 alias squash="git rebase -i HEAD~2"
